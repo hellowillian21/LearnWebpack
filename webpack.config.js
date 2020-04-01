@@ -1,13 +1,22 @@
 const isDev = process.env.NODE_ENV === 'development'
 const path = require('path')
+const Webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+// 清空打包文件
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+// 静态资源拷贝
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+// 抽离css
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+// 压缩css
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 module.exports = {
   mode: isDev ? 'development' : 'production',
   entry: [
-    './src/polyfills.js',
-    './src/index.js'
+    '@babel/polyfill',
+    './src/index.js',
+    './src/login.js'
   ],
   output: {
     path: path.resolve(__dirname, 'dist'), //必须是绝对路径
@@ -28,6 +37,11 @@ module.exports = {
   },
   // 开发环境下源码映射，生产环境可以使用 none 或者是 source-map
   devtool: isDev ? 'cheap-module-eval-source-map' : 'none',
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, "src")
+    }
+  },
   module: {
     rules: [
       {
@@ -37,7 +51,19 @@ module.exports = {
       },
       {
         test: /\.(sc|c)ss$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../',
+              hmr: isDev,
+              reloadAll: true
+            }
+          },
+          'css-loader',
+          'postcss-loader',
+          'sass-loader'
+        ],
         exclude: /node_modules/
       },
       {
@@ -68,8 +94,38 @@ module.exports = {
       },
       // hash: true // 是否加上hash，默认是 false
     }),
+    new HtmlWebpackPlugin({
+      template: './public/login.html',
+      filename: 'login.html', // 打包后的文件名
+      minify: {
+        removeAttributeQuotes: false, // 是否删除属性的双引号
+        collapseWhitespace: false, // 是否折叠空白
+      },
+      // hash: true // 是否加上hash，默认是 false
+    }),
     // 清理打包文件目录
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin(),
+    // 静态资源拷贝，将单个文件或整个目录复制到构建目录
+    new CopyWebpackPlugin(
+      [{
+        from: 'public/js/*.js',
+        to: path.resolve(__dirname, 'dist', 'js'),
+        flatten: true,
+      }],
+      {
+        ignore: ['other.js']
+      }
+    ),
+    // 抽离css
+    new MiniCssExtractPlugin({
+      // filename: "css/[name].[hash:6].css",
+      filename: "css/[name].css", // 加hash会导致热更新无效
+      chunkFilename: "[id].css",
+      publicPath: './'
+    }),
+    // 压缩css
+    new OptimizeCssAssetsPlugin({}),
+    // dev环境热更新
+    new Webpack.HotModuleReplacementPlugin()
   ]
-
 }

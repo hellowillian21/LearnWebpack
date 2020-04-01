@@ -4,4 +4,9 @@ body {
   background-color: $color;
   transition: all 2s;
   background: url('./images/test.jpg');
+  color: $color;
+}
+
+#btn {
+  border: 1px solid #cccccc;
 }
