@@ -5,8 +5,13 @@ const WebpackBaseConfig = require('./webpack.config.base')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // 压缩css
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
-module.exports = WebpackMerge(WebpackBaseConfig, {
+// 打包量化
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin")
+const smp = new SpeedMeasurePlugin()
+
+const WebpackConfig = WebpackMerge(WebpackBaseConfig, {
   mode: 'production',
   devtool: 'none',
   module: {
@@ -37,7 +42,8 @@ module.exports = WebpackMerge(WebpackBaseConfig, {
     }),
     // 压缩css
     new OptimizeCssAssetsPlugin({}),
-
+    new BundleAnalyzerPlugin()
   ]
 })
 
+module.exports = smp.wrap(WebpackConfig)

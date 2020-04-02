@@ -5,7 +5,7 @@ const WebpackBaseConfig = require('./webpack.config.base')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const apiMocker = require('mocker-api')
 
-module.exports = WebpackMerge(WebpackBaseConfig, {
+const WebpackConfig = WebpackMerge(WebpackBaseConfig, {
   mode: 'development',
   devtool: 'cheap-module-eval-source-map',
   devServer: {
@@ -65,3 +65,5 @@ module.exports = WebpackMerge(WebpackBaseConfig, {
     }),
   ]
 })
+
+module.exports = WebpackConfig
