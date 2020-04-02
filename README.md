@@ -33,3 +33,16 @@
       }
   }
   ```
+- `tree-shaking`的主要作用是用来清除代码中无用的部分。目前在`webpack4`我们设置mode为production的时候已经自动开启了`tree-shaking`。但是要想使其生效，生成的代码必须是`ES6`模块。不能使用其它类型的模块如`CommonJS`之流。如果使用`Babel`的话，这里有一个小问题，因为Babel的预案（preset）默认会将任何模块类型都转译成`CommonJS`类型，这样会导致`tree-shaking`失效。修正这个问题也很简单，在`.babelrc`文件或在`webpack.config.js`文件中设置`modules： false`就好了。
+  ```
+  // .babelrc
+  {
+    "presets": [
+      ["@babel/preset-env",
+        {
+          "modules": false
+        }
+      ]
+    ]
+  }
+  ```

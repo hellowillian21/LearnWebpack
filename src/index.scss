@@ -5,6 +5,9 @@ body {
   transition: all 2s;
   background: url('./images/test.jpg');
   color: $color;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #btn {
