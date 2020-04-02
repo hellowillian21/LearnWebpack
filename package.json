@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server",
-    "build": "cross-env NODE_ENV=production webpack"
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.config.dev.js",
+    "build": "cross-env NODE_ENV=production webpack --config build/webpack.config.prod.js"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +23,7 @@
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.0.3",
     "mini-css-extract-plugin": "^0.9.0",
+    "mocker-api": "^1.13.1",
     "node-sass": "^4.13.1",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "postcss-loader": "^3.0.0",
@@ -31,11 +32,13 @@
     "url-loader": "^4.0.0",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.10.3",
+    "webpack-merge": "^4.2.2"
   },
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
     "@babel/runtime": "^7.9.2",
-    "@babel/runtime-corejs3": "^7.9.2"
+    "@babel/runtime-corejs3": "^7.9.2",
+    "core-js": "^3.6.4"
   }
 }

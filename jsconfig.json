@@ -1,0 +1,13 @@
+{
+  "include": [
+    "src/**/*"
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [ // 解决vscode不识别@
+        "src/*"
+      ]
+    }
+  }
+}
