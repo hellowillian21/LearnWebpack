@@ -4,10 +4,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 // 静态资源拷贝
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const vueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
   entry: {
-    index: path.resolve(__dirname, '../src/index.js'),
+    main: path.resolve(__dirname, '../src/main.js'),
     login: path.resolve(__dirname, '../src/login.js'),
   },
   output: {
@@ -18,12 +19,18 @@ module.exports = {
   },
   resolve: {
     alias: {
+      'vue$': 'vue/dist/vue.runtime.esm.js',
       '@': path.resolve(__dirname, "../src")
-    }
+    },
+    extensions: ['*', '.js', '.json', '.vue']
   },
   module: {
     noParse: /jquery|lodash/,
     rules: [
+      {
+        test: /\.vue$/,
+        use: ['vue-loader']
+      },
       {
         test: /\.jsx?$/,
         use: ['thread-loader', 'cache-loader', 'babel-loader'],
@@ -47,6 +54,7 @@ module.exports = {
     ]
   },
   plugins: [
+    new vueLoaderPlugin(),
     // js注入html
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '../public/index.html'),
@@ -55,7 +63,7 @@ module.exports = {
         removeAttributeQuotes: false, // 是否删除属性的双引号
         collapseWhitespace: false, // 是否折叠空白
       },
-      chunks: ['index'],
+      chunks: ['main'],
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '../public/login.html'),
